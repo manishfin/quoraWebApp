@@ -1,12 +1,15 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
-class User(models.Model):
+class User(AbstractUser):
     username = models.CharField(max_length=20)
     password = models.CharField(max_length=20)
     email = models.CharField(max_length=50)
     firstName = models.CharField(max_length=50)
     lastName = models.CharField(max_length=50)
     dob = models.DateField()
+    GENDER_CHOICES = (('M', 'Male'), ('F', 'Female'))
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['username'], name="username")
@@ -26,7 +29,8 @@ class Question(models.Model):
     updatedAt = models.DateField()
     type = models.CharField(max_length=30)
     subType = models.CharField(max_length=50)
-    isAnonymous = models.IntegerField(max_length=1, default=0, choices=(0, 1))
+    CHOICES = ((0, True),(1, False))
+    isAnonymous = models.IntegerField(max_length=1, default=0, choices=CHOICES)
 
 class Answer(models.Model):
     userId = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -34,4 +38,5 @@ class Answer(models.Model):
     answer = models.TextField()
     createdAt = models.DateField()
     updatedAt = models.DateField()
-    isAnonymous = models.IntegerField(max_length=1, default=0, choices=(0, 1))
+    CHOICES = ((0, True),(1, False))
+    isAnonymous = models.IntegerField(max_length=1, default=0, choices=CHOICES)
