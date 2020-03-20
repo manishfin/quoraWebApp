@@ -14,8 +14,6 @@ class User(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_lenght=20)
-    type = models.CharField(max_length=30)
-    subType = models.CharField(max_length=50)
     description = models.TextField()
 
 class Question(models.Model):
@@ -26,6 +24,8 @@ class Question(models.Model):
     downvote = models.IntegerField()
     createdAt = models.DateField()
     updatedAt = models.DateField()
+    type = models.CharField(max_length=30)
+    subType = models.CharField(max_length=50)
     isAnonymous = models.IntegerField(max_length=1, default=0, choices=(0, 1))
 
 class Answer(models.Model):
