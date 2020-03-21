@@ -28,7 +28,6 @@ class Question(models.Model):
     createdAt = models.DateField()
     updatedAt = models.DateField()
     type = models.CharField(max_length=30)
-    subType = models.CharField(max_length=50)
     CHOICES = ((0, True),(1, False))
     isAnonymous = models.IntegerField(max_length=1, default=0, choices=CHOICES)
 
