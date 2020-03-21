@@ -40,3 +40,11 @@ class Answer(models.Model):
     updatedAt = models.DateField()
     CHOICES = ((0, True),(1, False))
     isAnonymous = models.IntegerField(max_length=1, default=0, choices=CHOICES)
+
+class Comment(models.Model):
+    userId = models.ForeignKey(User, on_delete=models.CASCADE)
+    questionId = models.ForeignKey(Question, on_delete=models.CASCADE)
+    comment = models.TextField()
+    upvote = models.IntegerField()
+    downvote = models.IntegerField()
+    date = models.DateField()
