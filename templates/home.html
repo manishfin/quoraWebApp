@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% block navlinks %}
+<ul class="navbar-nav ml-auto">
+    <li class="nav-item">
+        <div class="dropdown">
+            <button class="btn" type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <img src="https://my.tokyotreat.com/assets/customer/default-avatar-cddb3373e5244201873f6141dbc8bf587710b5f7a3b0e4f1b890c4e4dd8cdcaf.png" alt="Avatar" class="avatar">
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+                <div class="dropdown-item" style="padding: 1rem 1.5rem; border-bottom: 1px solid #e4e4e4; margin-bottom: 5px;"><b>Welcome, {{user.first_name}}</b></div>
+                <a class="dropdown-item" href="#">Profile</a>
+                <a class="dropdown-item" href="logout">Logout</a>
+            </div>
+        </div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-uppercase" href="#">
+            
+            <div class="bYbdYf" data-toggle="modal" data-target="#exampleModalCenter">Ask Question</div>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <div class="" id="">
+                        <img src="https://my.tokyotreat.com/assets/customer/default-avatar-cddb3373e5244201873f6141dbc8bf587710b5f7a3b0e4f1b890c4e4dd8cdcaf.png" alt="Avatar" class="avatar">
+                        <span class="text-capitalize">{{user.first_name}} {{user.last_name}} </span><span class="text-lowercase text-muted">asked</span>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="add" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <textarea class="form-control" name="question" placeholder="Ask Question" rows="3" required></textarea>
+                            </div>
+                            <div class="text-right">
+                            <button type="button" class="btn" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Add Question</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </a>
+    </li>
+</ul>
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 mb-4">
+            {% for question in questions %}
+                <div class="card shadow-sm p-4 mt-4 bg-white rounded">
+                    <div><small class="text-muted">Question added by {{question.user.first_name}}</small></div>
+                    <h4>{{question.question}}</h4>
+                    <div class="text-muted">
+                        <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <g id="answer" transform="translate(2.500000, 3.500000)" stroke="none" stroke-width="1.5" fill="none" fill-rule="evenodd">
+                                <g id="pen" transform="translate(9.000000, 9.000000) rotate(-315.000000) translate(-9.000000, -9.000000) translate(7.000000, -1.000000)">
+                                    <path d="M2,8.8817842e-16 L2,8.8817842e-16 L2,8.8817842e-16 C3.1045695,6.85269983e-16 4,0.8954305 4,2 L4,16 L2.00256278,20 L0,16 L0,2 L0,2 C-1.35267774e-16,0.8954305 0.8954305,1.09108686e-15 2,8.8817842e-16 Z" id="pen_body" class="icon_svg-stroke" stroke="#666" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <polygon id="pen_tip" class="icon_svg-fill_as_stroke" fill="#666" transform="translate(2.000000, 18.750000) scale(1, -1) translate(-2.000000, -18.750000) " points="2 17.5 3.25 20 0.75 20"></polygon>
+                                </g>
+                                <path d="M12,16 L17,16 L17,11 M7,1 L2,1 L2,6" id="bg" class="icon_svg-stroke" stroke="#666" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </g>
+                        </svg>
+                        <span>Answer</span>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
