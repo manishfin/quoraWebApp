@@ -25,7 +25,7 @@ class Category(models.Model):
 
 class Question(BaseClass):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, null=True, on_delete=models.CASCADE)
     question = models.TextField()
     upvote = models.IntegerField(default=0)
     downvote = models.IntegerField(default=0)
@@ -43,7 +43,7 @@ class Answer(BaseClass):
 
 class Comment(BaseClass):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
     comment = models.TextField()
     upvote = models.IntegerField(default=0)
     downvote = models.IntegerField(default=0)
