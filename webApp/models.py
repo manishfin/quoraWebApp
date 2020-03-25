@@ -27,8 +27,6 @@ class Question(BaseClass):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, null=True, on_delete=models.CASCADE)
     question = models.TextField()
-    upvote = models.IntegerField(default=0)
-    downvote = models.IntegerField(default=0)
     CHOICES = ((0, True),(1, False))
     is_anonymous = models.IntegerField(default=0, choices=CHOICES)
 
@@ -45,5 +43,10 @@ class Comment(BaseClass):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
     comment = models.TextField()
-    upvote = models.IntegerField(default=0)
-    downvote = models.IntegerField(default=0)
+
+
+class Vote(BaseClass):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
+    upvote = models.BooleanField(null=True)
+    downvote = models.BooleanField(null=True)
