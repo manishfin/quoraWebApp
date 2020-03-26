@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 from django.contrib.auth.models import AbstractUser
 
 class BaseClass(models.Model):
@@ -10,9 +11,6 @@ class BaseClass(models.Model):
 
 
 class User(AbstractUser):
-    username = models.CharField(max_length=20, unique=True)
-    password = models.CharField(max_length=20)
-    email = models.EmailField(max_length=50, unique=True)
     dob = models.DateField(null=True)
     GENDER_CHOICES = (('M', 'Male'), ('F', 'Female'))
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=True)
@@ -29,6 +27,11 @@ class Question(BaseClass):
     question = models.TextField()
     CHOICES = ((0, True),(1, False))
     is_anonymous = models.IntegerField(default=0, choices=CHOICES)
+    slug = models.SlugField(unique=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.question)
+        super(Question, self).save(*args, **kwargs)
 
 
 class Answer(BaseClass):
