@@ -5,7 +5,12 @@ from django.contrib import messages
 from webApp.models import User, Question, Answer, Comment, Vote
 from .forms import UserSignUpForm
 
-
+# TODO: use login_required decorator instead of user.is_authenticated
+# TODO: Move upvote/downvote logic to model methods
+# TODO: Rename your app from WebApp to web_app or web
+# TODO: Move templates to app specific folder
+# TODO: Update .gitignore
+# TODO: Organize your views. Login/Logout/Signup views on the top and the remaining follows
 # Create your views here.
 def home(request):
     if not request.user.is_authenticated:
@@ -16,14 +21,17 @@ def home(request):
 
 
 def question(request, que_slug):
+    # TODO: except block is not required
     try:
         question = get_object_or_404(Question, slug=que_slug)
     except Question.DoesNotExist:
         question = None
+
     try:
         answer = Answer.objects.get(question=question)
     except Answer.DoesNotExist:
         answer = None
+
     comments = Comment.objects.filter(answer=answer)
     upvote_count = Vote.objects.filter(answer=answer, upvote=True).count()
     downvote_count = Vote.objects.filter(answer=answer, downvote=True).count()
@@ -35,7 +43,7 @@ def question(request, que_slug):
         'upvote_count': upvote_count,
         'downvote_count': downvote_count,
     }
-    return render(request, 'question.html', context)
+    return render(request, 'web_app/question.html', context)
 
 
 def login(request):
@@ -122,13 +130,15 @@ def add_upvote(request, answer_id):
             if vote:
                 vote.upvote = not vote.upvote
                 vote.downvote = False
+                vote.save()
             else:
                 vote = Vote(user=request.user, upvote=True, answer=answer)
+                vote.save()
+
             if vote.upvote:
                 messages.info(request, 'You upvoted for this answer!')
             else:
                 messages.info(request, 'You removed upvote for this answer!')
-            vote.save()
     else:
         messages.error(request, 'Login required!')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER')) or redirect('home')
