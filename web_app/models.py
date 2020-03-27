@@ -53,3 +53,7 @@ class Vote(BaseClass):
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
     upvote = models.BooleanField(null=True)
     downvote = models.BooleanField(null=True)
+
+    @classmethod
+    def get_object(self, user, answer):
+        return self.objects.filter(user=user, answer=answer).first()
