@@ -39,10 +39,7 @@ def signup(request):
 
 
 def question(request, que_slug):
-    try:
-        question = get_object_or_404(Question, slug=que_slug)
-    except Question.DoesNotExist:
-        question = None
+    question = get_object_or_404(Question, slug=que_slug)
     try:
         answer = Answer.objects.get(question=question)
     except Answer.DoesNotExist:
@@ -80,6 +77,19 @@ def add_question(request):
 
 
 @login_required
+def edit_question(request, que_slug):
+    que = get_object_or_404(Question, slug=que_slug)
+    user = request.user
+    if user.id == que.user.id:
+        que.question = request.POST['question']
+        que.save()
+        messages.info('Question has been updated!')
+    else:
+        messages.info('User do not have permission to update this question!')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER')) or redirect('web_app/home')
+
+
+@login_required
 def add_answer(request, que_slug):
     user = request.user
     if request.method == 'POST':
@@ -90,6 +100,19 @@ def add_answer(request, que_slug):
         ans.save()
         messages.success(request, 'Answer added successfully!')
     return redirect('web_app/home')
+
+
+@login_required
+def edit_answer(request, answer_id):
+    ans = get_object_or_404(Answer, pk=answer_id)
+    user = request.user
+    if user.id == ans.user.id:
+        ans.answer = request.POST['answer']
+        ans.save()
+        messages.info('Answer has been updated!')
+    else:
+        messages.info('User do not have permission to update this answer!')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER')) or redirect('web_app/home')
 
 
 @login_required
@@ -107,10 +130,7 @@ def add_comment(request):
 @login_required
 def add_upvote(request, answer_id):
     user = request.user
-    try:
-        answer = Answer.objects.get(id=answer_id)
-    except Answer.DoesNotExist:
-        answer = None
+    answer = Answer.get_object(answer_id)
     if answer:
         vote = Vote.get_object(user, answer)
         if vote:
@@ -129,10 +149,7 @@ def add_upvote(request, answer_id):
 @login_required
 def add_downvote(request, answer_id):
     user = request.user
-    try:
-        answer = Answer.objects.get(id=answer_id)
-    except Answer.DoesNotExist:
-        answer = None
+    answer = Answer.get_object(answer_id)
     if answer:
         vote = Vote.get_object(user, answer)
         if vote:
