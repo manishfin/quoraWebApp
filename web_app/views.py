@@ -16,7 +16,7 @@ def login(request):
         if user:
             auth.login(request, user)
             # messages.success(request, 'Login Success!')
-            return redirect('web_app/home')
+            return redirect('home')
         else:
             messages.error(request, 'Login error! User does not exists.')
     return render(request, 'web_app/login.html')
@@ -31,7 +31,7 @@ def signup(request):
     form = UserSignUpForm(request.POST or None)
     if form.is_valid():
         form.save()
-        return redirect('web_app/login')
+        return redirect('login')
     context = {
         'form': form,
     }
@@ -73,7 +73,7 @@ def add_question(request):
         que = Question(question=question, user=user)
         que.save()
         messages.success(request, 'Question added successfully!')
-    return redirect('web_app/home')
+    return redirect('home')
 
 
 @login_required
@@ -86,7 +86,7 @@ def edit_question(request, que_slug):
         messages.info('Question has been updated!')
     else:
         messages.info('User do not have permission to update this question!')
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER')) or redirect('web_app/home')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER')) or redirect('home')
 
 
 @login_required
@@ -99,7 +99,7 @@ def add_answer(request, que_slug):
         ans = Answer(question=question, answer=answer, user=user, is_anonymous=is_anonymous)
         ans.save()
         messages.success(request, 'Answer added successfully!')
-    return redirect('web_app/home')
+    return redirect('home')
 
 
 @login_required
@@ -112,7 +112,7 @@ def edit_answer(request, answer_id):
         messages.info('Answer has been updated!')
     else:
         messages.info('User do not have permission to update this answer!')
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER')) or redirect('web_app/home')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER')) or redirect('home')
 
 
 @login_required
@@ -124,7 +124,7 @@ def add_comment(request):
         comment_obj = Comment(answer=answer, comment=comment, user=user)
         comment_obj.save()
         messages.success(request, 'Comment added successfully!')
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER')) or redirect('web_app/home')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER')) or redirect('home')
 
 
 @login_required
@@ -143,7 +143,7 @@ def add_upvote(request, answer_id):
         else:
             messages.info(request, 'You removed upvote for this answer!')
         vote.save()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER')) or redirect('web_app/home')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER')) or redirect('home')
 
 
 @login_required
@@ -162,7 +162,7 @@ def add_downvote(request, answer_id):
         else:
             messages.info(request, 'You removed downvote for this answer!')
         vote.save()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER')) or redirect('web_app/home')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER')) or redirect('home')
 
 
 @login_required
