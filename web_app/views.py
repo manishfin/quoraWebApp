@@ -134,7 +134,7 @@ def add_downvote(request, answer_id):
     except Answer.DoesNotExist:
         answer = None
     if answer:
-        vote = Vote.objects.filter(user=user, answer=answer).first()
+        vote = Vote.get_object(user, answer)
         if vote:
             vote.downvote = not vote.downvote
             vote.upvote = False
