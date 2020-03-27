@@ -41,6 +41,14 @@ class Answer(BaseClass):
     CHOICES = ((0, True),(1, False))
     is_anonymous = models.IntegerField(default=0, choices=CHOICES)
 
+    @classmethod
+    def get_object(self, answer_id):
+        try:
+            answer = self.objects.get(id=answer_id)
+        except self.DoesNotExist:
+            answer = None
+        return answer
+
 
 class Comment(BaseClass):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
