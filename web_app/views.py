@@ -8,6 +8,8 @@ from .forms import UserSignUpForm
 
 
 def login(request):
+    if request.user.is_authenticated:
+        return redirect('home')
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -28,6 +30,8 @@ def logout(request):
 
 
 def signup(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     form = UserSignUpForm(request.POST or None)
     if form.is_valid():
         form.save()
@@ -61,7 +65,7 @@ def question(request, que_slug):
 @login_required
 def home(request):
     comments = Comment.objects.all().order_by('-created_at')
-    items = Question.objects.prefetch_related('answer_set')
+    items = Question.objects.prefetch_related('answer_set').order_by('-created_at')
     return render(request, 'web_app/home.html', {'items': items, 'comments': comments})
 
 
@@ -83,10 +87,10 @@ def edit_question(request, que_slug):
     if user.id == que.user.id:
         que.question = request.POST['question']
         que.save()
-        messages.info('Question has been updated!')
+        messages.info(request, 'Question has been updated!')
     else:
-        messages.info('User do not have permission to update this question!')
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER')) or redirect('home')
+        messages.info(request, 'User do not have permission to update this question!')
+    return redirect('/question/'+que.slug)
 
 
 @login_required
@@ -109,9 +113,9 @@ def edit_answer(request, answer_id):
     if user.id == ans.user.id:
         ans.answer = request.POST['answer']
         ans.save()
-        messages.info('Answer has been updated!')
+        messages.info(request, 'Answer has been updated!')
     else:
-        messages.info('User do not have permission to update this answer!')
+        messages.info(request, 'User do not have permission to update this answer!')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER')) or redirect('home')
 
 
