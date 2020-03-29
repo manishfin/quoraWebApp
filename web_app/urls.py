@@ -4,7 +4,9 @@ from . import views
 urlpatterns = [
     path('', views.login, name='login'),
     path('add_question', views.add_question, name='add question'),
+    path('edit_question/<str:que_slug>', views.edit_question, name='edit question'),
     path('add_answer/<str:que_slug>', views.add_answer, name="add answer"),
+    path('edit_answer/<int:answer_id>', views.edit_answer, name='edit answer'),
     path('question/<str:que_slug>', views.question, name="question"),
     path('add_comment', views.add_comment, name="add comment"),
     path('<int:answer_id>/add_upvote', views.add_upvote, name="add upvote"),
