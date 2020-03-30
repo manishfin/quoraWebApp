@@ -110,7 +110,7 @@
                                             </button>
                                             </div>
                                             <div class="modal-body">
-                                                <form action="add_question" method="POST">
+                                                <form action="/add_question" method="POST">
                                                     {% csrf_token %}
                                                     <div class="form-group">
                                                         <textarea class="form-control" name="question" placeholder="Ask Question" rows="3" required></textarea>
