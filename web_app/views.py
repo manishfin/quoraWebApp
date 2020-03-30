@@ -94,6 +94,18 @@ def edit_question(request, que_slug):
 
 
 @login_required
+def delete_question(request, que_slug):
+    que = get_object_or_404(Question, slug=que_slug)
+    user = request.user
+    if user.id == que.user.id:
+        que.delete()
+        messages.info(request, 'Question has been deleted!')
+    else:
+        messages.info(request, 'User do not have permission to delete this question!')
+    return redirect('home')
+
+
+@login_required
 def add_answer(request, que_slug):
     user = request.user
     if request.method == 'POST':
@@ -117,6 +129,18 @@ def edit_answer(request, answer_id):
     else:
         messages.info(request, 'User do not have permission to update this answer!')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER')) or redirect('home')
+
+
+@login_required
+def delete_answer(request, answer_id):
+    ans = get_object_or_404(Question, pk=answer_id)
+    user = request.user
+    if user.id == ans.user.id:
+        ans.delete()
+        messages.info(request, 'Answer has been deleted!')
+    else:
+        messages.info(request, 'User do not have permission to delete this answer!')
+    return redirect('home')
 
 
 @login_required
