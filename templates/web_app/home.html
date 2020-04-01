@@ -143,7 +143,7 @@
                                         <form action="add_answer/{{item.slug}}" method="POST">
                                             {% csrf_token %}
                                             <div class="form-group">
-                                                <textarea class="form-control" name="answer" placeholder="Add Your Answer" rows="3" required></textarea>
+                                                {{ans_form}}
                                             </div>
                                             <div class="text-right">
                                             <button type="button" class="btn" data-dismiss="modal">Close</button>

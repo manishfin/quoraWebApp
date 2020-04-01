@@ -113,8 +113,8 @@
                                                 <form action="/add_question" method="POST">
                                                     {% csrf_token %}
                                                     <div class="form-group">
-                                                        <textarea class="form-control" name="question" placeholder="Ask Question" rows="3" required></textarea>
-                                                    </div>
+                                                        {{que_form}}
+                                                     </div>
                                                     <div class="text-right">
                                                     <button type="button" class="btn" data-dismiss="modal">Close</button>
                                                     <button type="submit" class="btn btn-primary">Add Question</button>

@@ -74,7 +74,7 @@
                                     <img src="https://my.tokyotreat.com/assets/customer/default-avatar-cddb3373e5244201873f6141dbc8bf587710b5f7a3b0e4f1b890c4e4dd8cdcaf.png" alt="Avatar" class="avatar">
                                     <span class="text-capitalize pl-2">{{answer.user.first_name}} {{answer.user.last_name}}</span> <small class="text-muted">answered {{answer.updated_at|date:"d M Y"}}</small>
                                 </div>
-                                {% if question.user.id == user.id %}
+                                {% if answer.user.id == user.id %}
                                 <div>
                                     <a href="#">
                                         <div class="text-muted" data-toggle="modal" data-target="#edit_ans_{{question.id}}">
@@ -107,7 +107,7 @@
                                                 <form action="/edit_answer/{{answer.id}}" method="POST">
                                                     {% csrf_token %}
                                                     <div class="form-group">
-                                                        <textarea class="form-control" name="answer" placeholder="Add Answer" rows="3" required>{{answer.answer}}</textarea>
+                                                        {{ans_form}}
                                                     </div>
                                                     <div class="text-right">
                                                     <button type="button" class="btn" data-dismiss="modal">Close</button>
