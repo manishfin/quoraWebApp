@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.models import auth
 from django.contrib import messages
 from web_app.models import User, Question, Answer, Comment, Vote
-from .forms import UserSignUpForm
+from .forms import UserSignUpForm, QuestionForm, AnswerForm
 
 
 def login(request):
@@ -48,7 +48,7 @@ def question(request, que_slug):
         answer = Answer.objects.get(question=question)
     except Answer.DoesNotExist:
         answer = None
-    comments = Comment.objects.filter(answer=answer)
+    comments = Comment.objects.filter(answer=answer).order_by('-created_at')
     upvote_count = Vote.objects.filter(answer=answer, upvote=True).count()
     downvote_count = Vote.objects.filter(answer=answer, downvote=True).count()
     context = {
@@ -58,6 +58,8 @@ def question(request, que_slug):
         'comment_count': comments.count(),
         'upvote_count': upvote_count,
         'downvote_count': downvote_count,
+        'que_form': QuestionForm(),
+        'ans_form': AnswerForm()
     }
     return render(request, 'web_app/question.html', context)
 
@@ -66,17 +68,26 @@ def question(request, que_slug):
 def home(request):
     comments = Comment.objects.all().order_by('-created_at')
     items = Question.objects.prefetch_related('answer_set').order_by('-created_at')
-    return render(request, 'web_app/home.html', {'items': items, 'comments': comments})
+    context = {
+        'items': items,
+        'comments': comments,
+        'que_form': QuestionForm(),
+        'ans_form': AnswerForm(),
+    }
+    return render(request, 'web_app/home.html', context)
 
 
 @login_required
 def add_question(request):
     user = request.user
-    if request.method == 'POST':
-        question = request.POST['question']
-        que = Question(question=question, user=user)
-        que.save()
+    form = QuestionForm(request.POST)
+    if form.is_valid():
+        instance = form.save(commit=False)
+        instance.user = user
+        instance.save()
         messages.success(request, 'Question added successfully!')
+    else:
+        messages.error(request, 'Error occurred while adding the question!')
     return redirect('home')
 
 
@@ -107,14 +118,17 @@ def delete_question(request, que_slug):
 
 @login_required
 def add_answer(request, que_slug):
+    question = get_object_or_404(Question, slug=que_slug)
     user = request.user
-    if request.method == 'POST':
-        answer = request.POST['answer']
-        question = Question.objects.get(slug=que_slug)
-        is_anonymous = False if request.user.is_anonymous else True
-        ans = Answer(question=question, answer=answer, user=user, is_anonymous=is_anonymous)
-        ans.save()
+    form = AnswerForm(request.POST)
+    if form.is_valid():
+        instance = form.save(commit=False)
+        instance.user = user
+        instance.question = question
+        instance.save()
         messages.success(request, 'Answer added successfully!')
+    else:
+        messages.error(request, 'Error occurred while adding the answer!')
     return redirect('home')
 
 
